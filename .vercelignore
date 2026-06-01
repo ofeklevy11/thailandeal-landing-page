@@ -1,0 +1,7 @@
+.claude/
+.image-slots.state.json
+*.png
+*.jpg
+*.jpeg
+*.webp
+.git/
