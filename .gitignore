@@ -1,0 +1,8 @@
+.claude/
+.image-slots.state.json
+*.png
+*.jpg
+*.jpeg
+*.webp
+node_modules/
+.vercel/
