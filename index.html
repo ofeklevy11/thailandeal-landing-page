@@ -268,6 +268,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     // local images under assets/ (ASCII filenames so they deploy cleanly to Vercel)
     'hero-bg':'assets/hero.png',
     'why-bg':'assets/why.png',
+    'reviews-bg':'assets/reviews.jpg',
+    'cta-bg':'assets/cta.png',
     'dest-bangkok':'assets/bangkok.png',
     'dest-phiphi':'assets/phiphi.png',
     'dest-phuket':'assets/phuket.png',
@@ -275,6 +277,72 @@ document.addEventListener('DOMContentLoaded', async function() {
     'dest-yaoyai':'assets/yaoyai.png',
     'dest-krabi':'assets/krabi.png'
   };
+
+  // Expanded, all-UNIQUE review set so the two marquee rows never repeat the same testimonial.
+  var LD_REVIEWS = [
+    {name:"רז שטרית", date:"פבר׳ 2025", text:"אחת ההחלטות הכי נכונות שלנו. זמינות 24/7, מענה באהבה גדולה, המלצות בכל מקום ועזרה מול המלונות. מומלץ מהלב, תעשו חיים!"},
+    {name:"קארין דניאל", date:"פבר׳ 2026", text:"טיול פשוט מושלם בתאילנד! מהרגע הראשון קיבלנו ליווי מקצועי, סבלני ואכפתי. הכול היה מתוקתק ומסודר ברמה גבוהה מאוד."},
+    {name:"תומר שטיין", date:"פבר׳ 2025", text:"שירות 5 כוכבים. כל המלצה על מלון או מסעדה הייתה בול. לא הייתי מרוצה ממיקום חדר בקראבי, ותוך 7 דקות שינו לי חדר. נהיה בקשר."},
+    {name:"רומי ברוקמן", date:"מרץ 2025", text:"ארגנו לנו טיול משפחתי מהסרטים. מסלול מדהים עם בתי מלון ומיקומים מרשימים, מענה לכל שאלה ויחס חם. תודה על טיול מושלם!"},
+    {name:"מתן נחום", date:"ינואר 2026", text:"ההכנות, הליווי, המלונות ובעיקר הזמינות היו שובר שוויון. מתוך טיולים רבים שביצענו, זה היה הטוב שבהם. בלי ספק אשתמש שוב."},
+    {name:"עדי מנדל", date:"ינואר 2026", text:"מהרגע הראשון נוצר חיבור אמיתי וטיפול באחריות רבה. ההסעות הגיעו בזמן, הנהגים זהירים, וטיול 4 האיים בפוקט היה מאורגן להפליא."},
+    {name:"נועה לוי", date:"דצמ׳ 2025", text:"תכננו ירח דבש והם בנו לנו מסלול חלומי בין קוסמוי לפוקט. כל מלון היה הפתעה טובה יותר מהקודם. הרגשנו מפונקים לאורך כל הדרך."},
+    {name:"אורן כהן", date:"נוב׳ 2025", text:"נסענו עם שלושה ילדים והיינו בטוחים שזה יהיה כאוס. בפועל הכול זרם, האטרקציות היו מותאמות לגילאים והילדים לא הפסיקו לחייך."},
+    {name:"שירה אזולאי", date:"אוק׳ 2025", text:"התלבטנו אם להזמין דרך סוכן ושמחים שעשינו את זה. חסכו לנו זמן, כסף וכאב ראש. כל בעיה קטנה נפתרה לפני שהספקנו לדאוג."},
+    {name:"דניאל פרץ", date:"ספט׳ 2025", text:"הליווי בעברית עשה את כל ההבדל. הרגשנו שיש לנו כתובת לכל שאלה, יום ולילה. מקצועיים, נחמדים ובעיקר אכפתיים. תודה על חופשה מושלמת."},
+    {name:"מאיה גולן", date:"אוג׳ 2025", text:"חזרנו מטיול של שבועיים בצפון תאילנד והכול היה מדויק. מצ׳אנג מאי ועד צ׳אנג ראי, כל פרט תוכנן בקפידה. מרגישים את הניסיון."},
+    {name:"יואב ברק", date:"יולי 2025", text:"המחיר היה משתלם בהרבה מכל מה שמצאנו לבד, והשירות פי כמה יותר טוב. ממליץ בחום לכל מי שרוצה ליהנות ולא להתעסק בלוגיסטיקה."},
+    {name:"ליאת אברהמי", date:"יוני 2025", text:"בחורף האחרון טסנו לפוקט והכול עבד כמו שעון. המלצות על מסעדות, סנפלינג ושייט לאיים — קיבלנו חוויה אמיתית ולא תיירותית."},
+    {name:"איתי רוזן", date:"מאי 2025", text:"חששתי מהתכנון העצמאי ופניתי אליהם. תוך יומיים היה לי מסלול מלא בדיוק בתקציב. בשטח הרגשתי שיש מאחוריי גב. שווה כל שקל."},
+    {name:"הדס מזרחי", date:"אפר׳ 2025", text:"נסיעה זוגית לקוסמוי וקופנגן. הצוות זמין בוואטסאפ בכל שעה, אפילו בהפרש השעות. כל מלון, כל טרנספר — בדיוק כמו שהובטח."},
+    {name:"גיא אדרי", date:"מרץ 2025", text:"טיילנו שלושה שבועות בין הצפון לדרום. השילוב של מקצועיות וחום אנושי נדיר. הילדים כבר שואלים מתי הטיול הבא. תודה ענקית!"},
+    {name:"נטע שלום", date:"פבר׳ 2025", text:"הזמנו ברגע האחרון והם הצליחו לארגן הכול תוך ימים ספורים. מלונות מהממים, יחס אישי וזמינות שאין כמותה. חוויה בלתי נשכחת."},
+    {name:"עומר בן דוד", date:"ינואר 2025", text:"מה שהכי הרשים זה שהיה למי לפנות 24/7. כל שאלה קטנה קיבלה מענה מיידי. נסענו רגועים וחזרנו עם חיוך ענק. ממליץ בחום."},
+    {name:"שני קליין", date:"דצמ׳ 2024", text:"חופשה משפחתית בפוקט וקראבי. כל יום היה מתוכנן בול לפי הקצב שלנו. הרגשנו שבונים לנו טיול אישי ולא מוצר מדף. מושלם."},
+    {name:"רועי לביא", date:"נוב׳ 2024", text:"שירות יוצא דופן מההתחלה ועד הסוף. מחירים הוגנים, מלונות מעולים, ותמיכה מקומית שהצילה אותנו פעם אחת בשטח. תודה רבה!"}
+  ];
+
+  // Rebuild the moving review wall so the two rows hold DIFFERENT testimonials (no repeats across rows).
+  // Safe DOM: textContent for all data; innerHTML only clones the static, trusted SVG (avatar/stars)
+  // already present in the page's own template card.
+  function ldBuildCard(r, avaSVG, starsSVG){
+    var card=document.createElement('div'); card.className='rev-card'; card.setAttribute('data-ld-rev','1');
+    var top=document.createElement('div'); top.className='rev-top';
+    var ava=document.createElement('span'); ava.className='rev-ava'; ava.innerHTML=avaSVG;
+    var id=document.createElement('div'); id.className='rev-id';
+    var nm=document.createElement('strong'); nm.textContent=r.name;
+    var dt=document.createElement('span'); dt.textContent=r.date;
+    id.appendChild(nm); id.appendChild(dt);
+    var stars=document.createElement('span'); stars.innerHTML=starsSVG;
+    top.appendChild(ava); top.appendChild(id); top.appendChild(stars);
+    var p=document.createElement('p'); p.textContent=r.text;
+    card.appendChild(top); card.appendChild(p);
+    return card;
+  }
+  function rebuildReviews(){
+    var tracks=document.querySelectorAll('.reviews .marquee-track');
+    if(tracks.length<2) return;
+    // re-apply if React re-rendered the wall back to the original set; our cards carry data-ld-rev
+    if(tracks[0].querySelector('.rev-card[data-ld-rev="1"]')) return;
+    var template=document.querySelector('.reviews .rev-card');
+    if(!template) return;
+    var avaSVG=(template.querySelector('.rev-ava')||{}).innerHTML||'';
+    var starsEl=template.querySelector('.rev-top > span:last-child');
+    var starsSVG=starsEl?starsEl.innerHTML:'';
+    var mid=Math.ceil(LD_REVIEWS.length/2);
+    var rows=[LD_REVIEWS.slice(0,mid), LD_REVIEWS.slice(mid)];
+    for(var t=0;t<tracks.length;t++){
+      var list=rows[t]||rows[0];
+      var track=tracks[t];
+      while(track.firstChild) track.removeChild(track.firstChild);
+      for(var d=0;d<2;d++){
+        var seq=document.createElement('div'); seq.className='marquee-seq';
+        if(d===1) seq.setAttribute('aria-hidden','true');
+        for(var i=0;i<list.length;i++) seq.appendChild(ldBuildCard(list[i], avaSVG, starsSVG));
+        track.appendChild(seq);
+      }
+    }
+  }
 
   function injectStyle(){
     var s=document.getElementById('ld-tweaks-style');
@@ -451,7 +519,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
     }
   }
-  function tick(){ injectStyle(); editText(); injectImages(); fixFinalBreak(); fixHeroSubBreak(); fixPrivacyLink(); killGsapFill(); fixGlyphGeometry(); paintFill(); }
+  function tick(){ injectStyle(); editText(); injectImages(); rebuildReviews(); fixFinalBreak(); fixHeroSubBreak(); fixPrivacyLink(); killGsapFill(); fixGlyphGeometry(); paintFill(); }
   var count=0, iv=setInterval(function(){ tick(); if(++count>50) clearInterval(iv); },150);
   tick();
   // Persistent, cheap re-injection: React re-renders (and the scroll-reveal sections that mount

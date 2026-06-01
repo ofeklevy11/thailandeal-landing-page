@@ -7,3 +7,4 @@
 .git/
 !assets/
 !assets/*.png
+!assets/*.jpg
