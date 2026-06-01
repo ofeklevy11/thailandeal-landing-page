@@ -265,15 +265,15 @@ document.addEventListener('DOMContentLoaded', async function() {
   ].join('\n');
 
   var IMG = {
-    // hero gets the local HERO.png
-    'hero-bg':'HERO.png',
-    // destinations bento — local images (Hebrew filenames in project root)
-    'dest-bangkok':'%D7%91%D7%A0%D7%92%D7%A7%D7%95%D7%A7.png', // בנגקוק
-    'dest-phiphi':'%D7%A7%D7%95%D7%A4%D7%99%D7%A4%D7%99.png', // קופיפי
-    'dest-phuket':'%D7%A4%D7%95%D7%A7%D7%98.png', // פוקט
-    'dest-samui':'%D7%A7%D7%95%D7%A1%D7%9E%D7%95%D7%99.png', // קוסמוי
-    'dest-yaoyai':'%D7%A7%D7%95%D7%99%D7%90%D7%95%D7%99.png', // קויאוי
-    'dest-krabi':'%D7%A7%D7%A8%D7%90%D7%91%D7%99.png'  // קראבי
+    // local images under assets/ (ASCII filenames so they deploy cleanly to Vercel)
+    'hero-bg':'assets/hero.png',
+    'why-bg':'assets/why.png',
+    'dest-bangkok':'assets/bangkok.png',
+    'dest-phiphi':'assets/phiphi.png',
+    'dest-phuket':'assets/phuket.png',
+    'dest-samui':'assets/samui.png',
+    'dest-yaoyai':'assets/yaoyai.png',
+    'dest-krabi':'assets/krabi.png'
   };
 
   function injectStyle(){

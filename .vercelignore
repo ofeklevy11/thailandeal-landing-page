@@ -5,3 +5,5 @@
 *.jpeg
 *.webp
 .git/
+!assets/
+!assets/*.png

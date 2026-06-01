@@ -6,3 +6,5 @@
 *.webp
 node_modules/
 .vercel/
+!assets/
+!assets/*.png
