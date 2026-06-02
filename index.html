@@ -557,14 +557,74 @@ document.addEventListener('DOMContentLoaded', async function() {
       l.insertBefore(m, l.firstChild);
     }
   }
-  function tick(){ injectStyle(); editText(); injectImages(); injectLogoMark(); rebuildReviews(); fixFinalBreak(); fixHeroSubBreak(); fixPrivacyLink(); killGsapFill(); fixGlyphGeometry(); paintFill(); }
+  // --- Lead webhook: POST every form submission to Make.com so we capture all fields ---
+  var LD_WEBHOOK='https://hook.eu2.make.com/bam74tmfm4llybk83gzek2i6y5xgbkyk';
+  var ldLastSend=0;
+  function ldVal(sel){ var el=document.querySelector(sel); return el?(el.value||'').trim():''; }
+  function ldTravelers(){
+    // custom stepper: read the digits sitting between the − and + buttons
+    var btns=document.querySelectorAll('button');
+    for(var i=0;i<btns.length;i++){
+      if(btns[i].textContent.trim()==='+'){
+        var box=btns[i].parentNode; if(!box) continue;
+        var m=(box.textContent||'').replace(/[^0-9]/g,'');
+        if(m) return m;
+      }
+    }
+    return '';
+  }
+  function ldFlights(){
+    var s=document.querySelector('select'); if(!s) return '';
+    var t=(s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'').trim();
+    return /בחרו/.test(t)?'':t;
+  }
+  function ldSendLead(){
+    var now=Date.now?Date.now():+new Date();
+    if(now-ldLastSend<1500) return; // debounce double fire
+    var name =ldVal('input[placeholder="איך לפנות אליכם?"]');
+    var phone=ldVal('input[placeholder="05X-XXXXXXX"]');
+    if(!name && !phone) return; // let React show its own validation on empty form
+    var email=ldVal('input[placeholder="name@email.com"]');
+    var dates=document.querySelectorAll('input[type="date"]');
+    var arrival  =dates[0]?(dates[0].value||''):'';
+    var departure=dates[1]?(dates[1].value||''):'';
+    var msg=ldVal('textarea');
+    var cb=document.querySelector('input[type="checkbox"]');
+    var consent=cb?(cb.checked?'כן':'לא'):'';
+    var fd=new FormData();
+    fd.append('subject','ליד חדש: '+name);
+    fd.append('name',name);
+    fd.append('phone',phone);
+    fd.append('email',email);
+    fd.append('arrival_date',arrival);
+    fd.append('departure_date',departure);
+    fd.append('travelers',ldTravelers());
+    fd.append('flights_booked',ldFlights());
+    fd.append('message',msg);
+    fd.append('privacy_consent',consent);
+    fd.append('source','thailandeal-landing-page');
+    fd.append('page_url',location.href);
+    try{ fetch(LD_WEBHOOK,{method:'POST',mode:'no-cors',body:fd}); ldLastSend=now; }catch(e){}
+  }
+  function wireWebhook(){
+    var btns=document.querySelectorAll('button');
+    for(var i=0;i<btns.length;i++){
+      var b=btns[i];
+      if(b.getAttribute('data-ld-hook')==='1') continue;
+      if(/שלחו פרטים/.test(b.textContent)){
+        b.addEventListener('click', ldSendLead, true); // capture phase, alongside React handler
+        b.setAttribute('data-ld-hook','1');
+      }
+    }
+  }
+  function tick(){ injectStyle(); editText(); injectImages(); injectLogoMark(); rebuildReviews(); fixFinalBreak(); fixHeroSubBreak(); fixPrivacyLink(); wireWebhook(); killGsapFill(); fixGlyphGeometry(); paintFill(); }
   var count=0, iv=setInterval(function(){ tick(); if(++count>50) clearInterval(iv); },150);
   tick();
   // Persistent, cheap re-injection: React re-renders (and the scroll-reveal sections that mount
   // late) strip our injected <img> siblings after the bootstrap interval ends, so keep restoring
   // them for the life of the page. injectImages/injectStyle are idempotent (they no-op when the
   // image already exists), so this is effectively free once everything is in place.
-  setInterval(function(){ injectStyle(); injectImages(); injectLogoMark(); }, 700);
-  if(window.MutationObserver){ new MutationObserver(function(){ if(!document.getElementById('ld-tweaks-style')) injectStyle(); injectImages(); injectLogoMark(); }).observe(document.documentElement,{childList:true,subtree:true}); }
+  setInterval(function(){ injectStyle(); injectImages(); injectLogoMark(); wireWebhook(); }, 700);
+  if(window.MutationObserver){ new MutationObserver(function(){ if(!document.getElementById('ld-tweaks-style')) injectStyle(); injectImages(); injectLogoMark(); wireWebhook(); }).observe(document.documentElement,{childList:true,subtree:true}); }
 })();
 </script>
