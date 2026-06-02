@@ -211,13 +211,25 @@ document.addEventListener('DOMContentLoaded', async function() {
       '.hero h1 .hline{white-space:normal!important;display:block!important}' +
       '.hero h1 .fchar,.hero h1 .fspace{white-space:normal!important}' +
       '.hero-sub{font-size:clamp(21px,5.6vw,27px)!important;line-height:1.5!important}' +
-      /* bento text smaller on mobile so the grid is more compact */
-      '.b-intro h2{font-size:clamp(24px,6.5vw,30px)!important}' +
-      '.b-intro p{font-size:15px!important;line-height:1.5!important}' +
+      /* real compact bento on phone: 2 columns, content-sized rows */
+      '.bento{grid-template-columns:1fr 1fr!important;gap:10px!important;grid-auto-rows:minmax(104px,auto)!important}' +
+      '.bento>*{grid-column:auto!important;grid-row:auto!important}' +
+      '.bento>.b-intro{grid-column:1/3!important;grid-row:auto!important}' +
+      '.bento>.b-card{padding:13px!important;justify-content:space-between!important}' +
+      '.bento>.b-card h3{font-size:14px!important;line-height:1.25!important}' +
+      '.bento>.b-card .b-ico{width:32px!important;height:32px!important;border-radius:9px!important;margin-bottom:0!important}' +
+      '.bento>.b-card .b-ico svg{width:17px!important;height:17px!important}' +
+      '.b-intro{padding:20px!important}' +
+      '.b-intro h2{font-size:clamp(22px,6vw,28px)!important}' +
+      '.b-intro p{font-size:14px!important;line-height:1.5!important}' +
       '.b-intro .b-cta{font-size:14px!important;padding:10px 18px!important}' +
-      '.bento>.b-card h3{font-size:17px!important;line-height:1.25!important}' +
-      '.bento>.b-card{padding:18px!important}' +
-      '.b-intro{padding:24px!important}' +
+      /* mobile: logo to the LEFT edge, burger stays on the right */
+      '.nav-logo{order:2!important;margin-inline-start:auto!important}' +
+      '.nav-actions{order:1!important;margin-inline-start:0!important}' +
+      /* compact nav bar: just logo + burger height + a little padding */
+      '.nav,.nav.solid{padding:7px 0!important}' +
+      '.nav-mobile{margin-top:0!important;padding:0!important}' +
+      '.nav-mobile.open{margin-top:8px!important;padding:12px!important}' +
     '}',
     /* remove ALL WhatsApp entry points — lead form only */
     '.wa-fab,.nav-wa,.btn-wa{display:none!important}',
@@ -242,6 +254,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     '.b-intro h2{font-weight:400!important}',
     '.b-intro p{color:#fff!important;font-size:20px!important;font-weight:400!important;opacity:1!important}',
     '.b-intro .b-cta{font-weight:400!important}',
+    /* FINAL mobile bento sizing — placed last so it beats the unconditional 23px/20px rules above */
+    '@media (max-width:768px){' +
+      '.bento>.b-card h3{font-size:14px!important;line-height:1.25!important}' +
+      '.b-intro p{font-size:14px!important;line-height:1.5!important}' +
+    '}',
     /* THIN weight for the final-CTA paragraph */
     '.final p{font-size:clamp(22px,3vw,29px)!important;font-weight:400!important;color:#fff!important;max-width:30em}',
     /* destinations bento: break out of .wrap to near-full width + taller rows for bigger images (desktop only) */
