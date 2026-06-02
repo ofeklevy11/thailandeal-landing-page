@@ -280,7 +280,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     'image-slot.ld-placeholder{opacity:1!important;outline:3px dashed rgba(244,168,44,.9)!important;outline-offset:-6px!important;border-radius:16px!important}',
     /* lighten section scrims so the real BENTO/CTA photos show through (kept dark enough for white text) */
     '.section.why .band-scrim{background:linear-gradient(160deg,rgba(7,46,44,.5),rgba(11,74,71,.36) 55%,rgba(14,107,102,.34))!important}',
-    '.section.final .final-scrim{background:linear-gradient(150deg,rgba(11,74,71,.55),rgba(14,107,102,.4) 55%,rgba(19,189,185,.32))!important}'
+    '.section.final .final-scrim{background:linear-gradient(150deg,rgba(11,74,71,.55),rgba(14,107,102,.4) 55%,rgba(19,189,185,.32))!important}',
+    /* brand emblem inline next to the wordmark (desktop + mobile) */
+    '.nav-logo{display:inline-flex!important;align-items:center;gap:9px!important}',
+    '.nav-logo img.ld-logo-mark{height:30px!important;width:auto!important;display:block!important;flex:0 0 auto!important;filter:none!important}',
+    '.nav.solid .nav-logo img.ld-logo-mark{filter:none!important}',
+    '@media (max-width:768px){.nav-logo{gap:7px!important}.nav-logo img.ld-logo-mark{height:26px!important}}'
   ].join('\n');
 
   var IMG = {
@@ -541,14 +546,25 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
     }
   }
-  function tick(){ injectStyle(); editText(); injectImages(); rebuildReviews(); fixFinalBreak(); fixHeroSubBreak(); fixPrivacyLink(); killGsapFill(); fixGlyphGeometry(); paintFill(); }
+  function injectLogoMark(){
+    var logos=document.querySelectorAll('.nav-logo');
+    for(var i=0;i<logos.length;i++){
+      var l=logos[i];
+      if(l.querySelector('img.ld-logo-mark')) continue;
+      var m=document.createElement('img');
+      m.className='ld-logo-mark'; m.src='assets/logo-mark.png'; m.alt='';
+      m.setAttribute('aria-hidden','true');
+      l.insertBefore(m, l.firstChild);
+    }
+  }
+  function tick(){ injectStyle(); editText(); injectImages(); injectLogoMark(); rebuildReviews(); fixFinalBreak(); fixHeroSubBreak(); fixPrivacyLink(); killGsapFill(); fixGlyphGeometry(); paintFill(); }
   var count=0, iv=setInterval(function(){ tick(); if(++count>50) clearInterval(iv); },150);
   tick();
   // Persistent, cheap re-injection: React re-renders (and the scroll-reveal sections that mount
   // late) strip our injected <img> siblings after the bootstrap interval ends, so keep restoring
   // them for the life of the page. injectImages/injectStyle are idempotent (they no-op when the
   // image already exists), so this is effectively free once everything is in place.
-  setInterval(function(){ injectStyle(); injectImages(); }, 700);
-  if(window.MutationObserver){ new MutationObserver(function(){ if(!document.getElementById('ld-tweaks-style')) injectStyle(); injectImages(); }).observe(document.documentElement,{childList:true,subtree:true}); }
+  setInterval(function(){ injectStyle(); injectImages(); injectLogoMark(); }, 700);
+  if(window.MutationObserver){ new MutationObserver(function(){ if(!document.getElementById('ld-tweaks-style')) injectStyle(); injectImages(); injectLogoMark(); }).observe(document.documentElement,{childList:true,subtree:true}); }
 })();
 </script>
