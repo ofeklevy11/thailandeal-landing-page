@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8">
   <title>תאילנדיל · חופשה בראש שקט</title>
+  <link rel="icon" type="image/png" href="assets/logo-mark.png">
+  <link rel="shortcut icon" type="image/png" href="assets/logo-mark.png">
+  <link rel="apple-touch-icon" href="assets/logo-mark.png">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #0b4a47; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
@@ -393,6 +396,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null), n;
     while((n=w.nextNode())){
       if(n.nodeValue && n.nodeValue.indexOf('אמיתיות')>-1) n.nodeValue=n.nodeValue.replace(/\s*אמיתיות/g,'');
+      if(n.nodeValue && n.nodeValue.indexOf('נוחתים')>-1) n.nodeValue=n.nodeValue.replace(/נוחתים/g,'משאירים פרטים');
     }
   }
 
@@ -617,7 +621,19 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
     }
   }
-  function tick(){ injectStyle(); editText(); injectImages(); injectLogoMark(); rebuildReviews(); fixFinalBreak(); fixHeroSubBreak(); fixPrivacyLink(); wireWebhook(); killGsapFill(); fixGlyphGeometry(); paintFill(); }
+  function fixFavicon(){
+    var href='assets/logo-mark.png';
+    var links=document.querySelectorAll('link[rel~="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]');
+    var ok=false;
+    for(var i=0;i<links.length;i++){ if((links[i].getAttribute('href')||'').indexOf('logo-mark')>-1){ ok=true; } else { links[i].parentNode&&links[i].parentNode.removeChild(links[i]); } }
+    if(!ok){
+      ['icon','shortcut icon','apple-touch-icon'].forEach(function(rel){
+        var l=document.createElement('link'); l.rel=rel; l.href=href; if(rel!=='apple-touch-icon') l.type='image/png';
+        document.head&&document.head.appendChild(l);
+      });
+    }
+  }
+  function tick(){ injectStyle(); editText(); injectImages(); injectLogoMark(); fixFavicon(); rebuildReviews(); fixFinalBreak(); fixHeroSubBreak(); fixPrivacyLink(); wireWebhook(); killGsapFill(); fixGlyphGeometry(); paintFill(); }
   var count=0, iv=setInterval(function(){ tick(); if(++count>50) clearInterval(iv); },150);
   tick();
   // Persistent, cheap re-injection: React re-renders (and the scroll-reveal sections that mount
